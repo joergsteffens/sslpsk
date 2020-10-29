@@ -2,6 +2,11 @@ language: python
 
 env: PYTHON_BIN=python
 
+# libssl versions:
+# * Ubuntu 16.04 (xenial): libssl1.0.0
+# * Ubuntu 18.04 (bionic): libssl1.0.0
+# * Ubuntu 20.04 (focal):  libssl1.1
+
 matrix:
   include:
     - os: linux
@@ -16,11 +21,21 @@ matrix:
       python: 3.7
     - os: linux
       python: 3.8
+    - os: linux
+      dist: xenial
+      python: 3.8
+    - os: linux
+      dist: bionic
+      python: 3.8
+    - os: linux
+      dist: focal
+      python: 3.8
     - os: osx
       language: generic
       env: PYTHON_BIN=python2
 
 script:
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then dpkg -l libssl*; fi
   - $PYTHON_BIN setup.py install
   - cd ..
   - # $PYTHON_BIN -m sslpsk.test
